@@ -34,7 +34,7 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  const requiredFields = ['description', 'created', 'due'];
+  const requiredFields = ['description', 'category'];
   for (let i = 0; i < requiredFields.length; i++) {
     const field = requiredFields[i];
     if (!(field in req.body)) {
@@ -48,7 +48,8 @@ router.post('/', (req, res) => {
     .create({
       description: req.body.description,
       category: req.body.category,
-      due_date: req.body.due_date
+      due: req.body.due,
+      checked: req.body.checked
     })
     .then(goal => res.status(201).json(goal.serialize()))
     .catch(err => {
@@ -80,7 +81,7 @@ router.put('/:id', (req, res) => {
   }
 
   const updated = {};
-  const updateableFields = ['description', 'category', 'due_date'];
+  const updateableFields = ['description', 'category', 'due', 'checked'];
   updateableFields.forEach(field => {
     if (field in req.body) {
       updated[field] = req.body[field];

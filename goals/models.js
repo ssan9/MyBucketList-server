@@ -9,6 +9,10 @@ const GoalSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  category: {
+    type: String,
+    required: true
+  },
   created: {
     type: Date,
     default: new Date()
@@ -19,9 +23,11 @@ const GoalSchema = mongoose.Schema({
 
 GoalSchema.methods.serialize = function() {
   return {
-    description: this.username || '',
-    created: this.firstName || '',
-    due: this.lastName || '',
+    id: this._id,
+    description: this.description || '',
+    category: this.category || '',
+    created: this.created,
+    due: this.due,
     checked: this.checked
   };
 };
