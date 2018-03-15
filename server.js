@@ -1,6 +1,7 @@
 'use strict';
 require('dotenv').config();
 const express = require('express');
+const bodyParser = require('body-parser')
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const passport = require('passport');
@@ -13,6 +14,8 @@ const passport = require('passport');
 // console.log(jimmy); // Stewart - the variable name is jimmy, not james
 // console.log(bobby); // De Niro - the variable name is bobby, not robert
 const { router: usersRouter } = require('./users');
+const { router: goalsRouter } = require('./goals');
+
 const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 
 mongoose.Promise = global.Promise;
@@ -23,6 +26,11 @@ const app = express();
 
 // Logging
 app.use(morgan('common'));
+
+app.use(bodyParser.urlencoded({ extended: false }))
+
+app.use(bodyParser.json())
+
 
 // CORS
 app.use(function (req, res, next) {
@@ -39,6 +47,7 @@ passport.use(localStrategy);
 passport.use(jwtStrategy);
 
 app.use('/api/users/', usersRouter);
+app.use('/api/goals/', goalsRouter);
 app.use('/api/auth/', authRouter);
 
 const jwtAuth = passport.authenticate('jwt', { session: false });
