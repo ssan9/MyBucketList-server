@@ -18,7 +18,8 @@ const GoalSchema = mongoose.Schema({
     default: new Date()
   },
   due: {type: Date, default: new Date()},
-  checked: {type: Boolean, default: false}
+  checked: {type: Boolean, default: false},
+  completed: {type: Date, default: new Date()}  
 });
 
 GoalSchema.methods.serialize = function() {
@@ -26,9 +27,10 @@ GoalSchema.methods.serialize = function() {
     id: this._id,
     description: this.description || '',
     category: this.category || '',
-    created: this.created,
-    due: this.due,
-    checked: this.checked
+    created: this.created.toISOString().substr(0, 10),
+    due: this.due.toISOString().substr(0, 10),
+    checked: this.checked,
+    completed: this.completed.toISOString().substr(0, 10)
   };
 };
 

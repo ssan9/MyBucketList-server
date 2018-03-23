@@ -49,7 +49,8 @@ router.post('/', (req, res) => {
       description: req.body.description,
       category: req.body.category,
       due: req.body.due,
-      checked: req.body.checked
+      checked: req.body.checked,
+      completed: req.body.completed 
     })
     .then(goal => res.status(201).json(goal.serialize()))
     .catch(err => {
@@ -81,7 +82,7 @@ router.put('/:id', (req, res) => {
   }
 
   const updated = {};
-  const updateableFields = ['description', 'category', 'due', 'checked'];
+  const updateableFields = ['description', 'category', 'due', 'checked', 'completed'];
   updateableFields.forEach(field => {
     if (field in req.body) {
       updated[field] = req.body[field];
