@@ -111,8 +111,7 @@ describe('Auth endpoints', function () {
           expect(payload.user).to.deep.equal({
             username,
             firstName,
-            lastName,
-            id
+            lastName
           });
         });
     });
