@@ -3,21 +3,23 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const {Goal} = require('./models');
-const { User } = require("../users/models");
+const {User} = require("../users/models");
 const passport = require("passport");
 const jwtAuth = passport.authenticate("jwt", { session: false });
 
 router.get("/goals", jwtAuth, (req, res) => {
+  // console.log(req.user);
   var user;
   User.findById(req.user.id)
     .then(_user => (user = _user))
-    .then(() => 
+    .then(() =>
       Goal.find({
         user: req.user.id
       })
     )
     .then(goals => {
-      return res.json({
+      // add up all expenses
+       return res.json({
         checked: user.checked,
         unchecked: user.unchecked,
         description: user.description,
@@ -26,14 +28,16 @@ router.get("/goals", jwtAuth, (req, res) => {
         due: user.due,
         completed: user.completed
       });
+         console.log("hiiiiiiiiiiiiiiiiiiiiiiiiii");
+
     })
     .catch(err => {
-      console.log(err);
-      return res.status(500).json({ error: "something went teribly wrong" });
+      console.error(err);
+      return res.status(500).json({ error: "something went terribly wrong" });
     });
 });
 
-router.get('/', jwtAuth, (req, res) => {
+router.get("/", jwtAuth, (req, res) => {
   Goal
     .find({user: req.user.id})
     .then(goals => {
@@ -45,7 +49,7 @@ router.get('/', jwtAuth, (req, res) => {
     });
 });
 
-router.get('/:id', jwtAuth, (req, res) => {
+router.get("/:id", jwtAuth, (req, res) => {
   Goal
     .findById(req.params.id)
     .then(goal => res.json(goal.serialize()))
@@ -55,7 +59,7 @@ router.get('/:id', jwtAuth, (req, res) => {
     });
 });
 
-router.post('/', jwtAuth, (req, res) => {
+router.post("/", jwtAuth, (req, res) => {
   const requiredFields = ['description', 'category'];
   for (let i = 0; i < requiredFields.length; i++) {
     const field = requiredFields[i];
@@ -68,6 +72,7 @@ router.post('/', jwtAuth, (req, res) => {
 
   Goal
     .create({
+      user: req.user.id,
       description: req.body.description,
       category: req.body.category,
       due: req.body.due,
@@ -83,7 +88,7 @@ router.post('/', jwtAuth, (req, res) => {
 });
 
 
-router.delete('/:id', jwtAuth, (req, res) => {
+router.delete("/:id", jwtAuth, (req, res) => {
   Goal
     .findByIdAndRemove(req.params.id)
     .then(() => {
@@ -96,7 +101,7 @@ router.delete('/:id', jwtAuth, (req, res) => {
 });
 
 
-router.put('/:id', jwtAuth, (req, res) => {
+router.put("/:id", jwtAuth, (req, res) => {
   if (!(req.params.id && req.body.id && req.params.id === req.body.id)) {
     res.status(400).json({
       error: 'Request path id and request body id values must match'

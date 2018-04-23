@@ -19,7 +19,8 @@ const GoalSchema = mongoose.Schema({
   },
   due: {type: Date, default: new Date()},
   checked: {type: Boolean, default: false},
-  completed: {type: Date, default: new Date()}  
+  completed: {type: Date, default: new Date()},  
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User" } 
 });
 
 GoalSchema.methods.serialize = function() {
@@ -30,10 +31,11 @@ GoalSchema.methods.serialize = function() {
     created: this.created.toISOString().substr(0, 10),
     due: this.due.toISOString().substr(0, 10),
     checked: this.checked,
-    completed: this.completed.toISOString().substr(0, 10)
+    completed: this.completed.toISOString().substr(0, 10),
+    user: this.user
   };
 };
 
 const Goal = mongoose.model('Goal', GoalSchema);
 
-module.exports = {Goal};
+module.exports = { Goal };
