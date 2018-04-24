@@ -8,13 +8,11 @@ const passport = require("passport");
 const jwtAuth = passport.authenticate("jwt", { session: false });
 
 router.get("/goals", jwtAuth, (req, res) => {
-  // console.log(req.user);
 
   Goal.find({
     user: req.user.id
   })
     .then(goals => {
-      // add up all expenses
       return res.json({
         checked: user.checked,
         unchecked: user.unchecked,
